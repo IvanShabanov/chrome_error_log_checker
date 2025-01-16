@@ -15,7 +15,8 @@
 				"scripts/content.js"
 			],
 			"matches": [
-				"https://*.ru/*"
+				"https://*/*",
+				"http://*/*"
 			]
 		}
 	]
