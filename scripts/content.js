@@ -7,6 +7,7 @@ function remove_popup__error__log() {
 
 fetch("/__error.log", {
     method: 'GET',
+	cache: "no-cache"
 }).then(function (response) {
 	if (response.ok) {
 		let body = document.querySelector("body");
