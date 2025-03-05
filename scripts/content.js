@@ -4,7 +4,7 @@ function remove_popup__error__log() {
 		_el.remove();
 	}
 }
-if (document.innerHTML.indexOf('bitrix') > 0) {
+if (document.querySelector('head')?.innerHTML?.includes('bitrix')) {
 	fetch("/__error.log", {
 		method: 'GET',
 		cache: "no-cache"
