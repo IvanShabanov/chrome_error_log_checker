@@ -3,7 +3,13 @@ class Class_check_error_log_ext {
 	dbName = 'check_error_log_ext'
 	dbMainStore = 'sites'
 
+
 	constructor() {
+		console.log('Class_check_error_log_ext.constructor()');
+	}
+
+	run() {
+		console.log('Class_check_error_log_ext.run()');
 		const THIS = this;
 		fetch("/__error.log", {
 			method: 'GET',
@@ -12,7 +18,9 @@ class Class_check_error_log_ext {
 			if (response.ok) {
 				let body = document.querySelector("body");
 				let div = document.createElement("div");
-				div.innerHTML = 'На сайте найден <a href="/__error.log" target="_blank">__error.log</a> <button onclick="">Следить за сайтом</button>';
+				let html = 'На сайте найден <a href="/__error.log" target="_blank">__error.log</a>';
+				// html += '<button onclick="Check_error_log_ext.putThisUrl();">Следить за сайтом</button>';
+				div.innerHTML = html;
 				div.classList.add('__error_log');
 				div.setAttribute('style', 'position:fixed; top: 0px; left: 0px; width: 100vw; text-align:center; color: #fff; padding: 10px; background: #a33; z-index: 1000000;');
 				body.append(div);
@@ -24,6 +32,7 @@ class Class_check_error_log_ext {
 	}
 
 	remove_popup__error__log() {
+		console.log('Class_check_error_log_ext.remove_popup__error__log()');
 		let _el = document.querySelector('.__error_log');
 		if (_el) {
 			_el.remove();
@@ -31,6 +40,7 @@ class Class_check_error_log_ext {
 	}
 
 	openDB() {
+		console.log('Class_check_error_log_ext.openDB()');
 		const THIS = this;
 		let openRequest = indexedDB.open(THIS.dbName, 1);
 
@@ -53,6 +63,7 @@ class Class_check_error_log_ext {
 	}
 
 	isdbOpened() {
+		console.log('Class_check_error_log_ext.isdbOpened()');
 		if (typeof this.db == 'undefined' || this.db === null || this.db == 0) {
 			this.openDB();
 		}
@@ -63,11 +74,13 @@ class Class_check_error_log_ext {
 	}
 
 	putThisUrl() {
+		console.log('Class_check_error_log_ext.putThisUrl()');
 		let url = window.location.host;
-		putUrl(url);
+		this.putUrl(url);
 	}
 
 	putUrl(url) {
+		console.log('Class_check_error_log_ext.putUrl(url)');
 		if (!this.isdbOpened()) {
 			return;
 		}
@@ -98,10 +111,10 @@ class Class_check_error_log_ext {
 		request.onerror = function() {
 			console.log("Ошибка", request.error);
 		};
-
 	}
 
 	delUrl(url) {
+		console.log('Class_check_error_log_ext.delUrl(url)');
 		if (!this.isdbOpened()) {
 			return;
 		}
@@ -130,12 +143,28 @@ class Class_check_error_log_ext {
 	}
 
 	getSites() {
+		console.log('Class_check_error_log_ext.getSites()');
 		if (!this.isdbOpened()) {
 			return;
 		}
 
 		let transaction = db.transaction(THIS.dbMainStore, "readwrite");
+
 	}
 }
 
-let Check_error_log_ext = new Class_check_error_log_ext();
+var Check_error_log_ext = new Class_check_error_log_ext();
+let isBitrix = false;
+let head = document.querySelector('head');
+if (head) {
+	console.log('if (head) {');
+	if (head.innerHTML?.includes("bitrix")) {
+		console.log('if (head.innerHTML?.includes("bitrix")) {');
+		isBitrix = true;
+	}
+}
+
+if (isBitrix) {
+	console.log('if (isBitrix) {');
+	Check_error_log_ext.run();
+}
