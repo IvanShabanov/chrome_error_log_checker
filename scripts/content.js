@@ -10,26 +10,27 @@ class Class_check_error_log_ext {
 			method: "GET",
 			cache: "no-cache",
 		})
-			.then(function (response) {
-				if (response.ok) {
-					let body = document.querySelector("body");
-					let div = document.createElement("div");
-					let html =
-						'На сайте найден <a href="/__error.log" target="_blank">__error.log</a>';
-					// html += '<button onclick="Check_error_log_ext.putThisUrl();">Следить за сайтом</button>';
-					div.innerHTML = html;
-					div.classList.add("__error_log");
-					div.setAttribute(
-						"style",
-						"position:fixed; top: 0px; left: 0px; width: 100vw; text-align:center; color: #fff; padding: 10px; background: #a33; z-index: 1000000;"
-					);
-					body.append(div);
-					setTimeout(function () {
-						THIS.remove_popup__error__log();
-					}, 5000);
-				}
-			})
-			.catch(function (err) {});
+		.then(function (response) {
+			if (response.ok) {
+				let body = document.querySelector("body");
+				let div = document.createElement("div");
+				let html =
+					'На сайте найден <a href="/__error.log" target="_blank">__error.log</a>';
+				//html += '<button onclick="Check_error_log_ext.remove_popup__error__log();">&times;</button>';
+				//html += '<button onclick="Check_error_log_ext.putThisUrl();">Следить за сайтом</button>';
+				div.innerHTML = html;
+				div.classList.add("__error_log");
+				div.setAttribute(
+					"style",
+					"position:fixed; top: 0px; left: 0px; width: 100vw; text-align:center; color: #fff; padding: 10px; background: #a33; z-index: 1000000;"
+				);
+				body.append(div);
+				setTimeout(function () {
+					THIS.remove_popup__error__log();
+				}, 3000);
+			}
+		})
+		.catch(function (err) {});
 	}
 
 	remove_popup__error__log() {
@@ -150,17 +151,35 @@ class Class_check_error_log_ext {
 	}
 }
 
-var Check_error_log_ext = new Class_check_error_log_ext();
-let isBitrix = false;
-let head = document.querySelector("head");
-if (head) {
-	console.log("if (head) {");
-	if (head.innerHTML?.includes("bitrix")) {
 
-		isBitrix = true;
+
+let ignore = false;
+let ignoreUrls = [
+	'axioma.me',
+	'corp.axi'
+];
+
+ignoreUrls.forEach(
+	(ignoreUrl) => {
+		if (window.location.href.indexOf(ignoreUrl) > -1) {
+			ignore = true;
+		}
 	}
-}
+);
+var Check_error_log_ext = new Class_check_error_log_ext();
+if (!ignore) {
+	let isBitrix = false;
+	let head = document.querySelector("head");
+	if (head) {
+		console.log("if (head) {");
+		if (head.innerHTML?.includes("bitrix")) {
 
-if (isBitrix) {
-	Check_error_log_ext.run();
+			isBitrix = true;
+		}
+	}
+
+	if (isBitrix) {
+
+		Check_error_log_ext.run();
+	}
 }
